@@ -1,11 +1,12 @@
+CMakeFiles/
 .vscode/
 build/
-CMakeFiles/
+
 CMakeCache.txt
-*.on
-*.exe
-*.asm
 *.vcxproj
 *.filters
 *.cmake
+*.exe
+*.asm
 *.sln
+*.on

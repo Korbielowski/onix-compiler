@@ -7,7 +7,7 @@ Parser::Parser(std::vector<Token> tokens)
 
 std::optional<NodeExpr> Parser::parse_expr()
 {
-    if (peak().has_value() && peak().value().type == TokenType::TOKEN_INT)
+    if (peek().has_value() && peek().value().type == TokenType::TOKEN_INT)
     {
         NodeExpr node_expr = NodeExpr{};
         node_expr.int_lit = consume();
@@ -19,9 +19,11 @@ std::optional<NodeExpr> Parser::parse_expr()
 std::optional<NodeExit> Parser::parse()
 {
     std::optional<NodeExit> exit_node;
-    while (peak().has_value())
+    while (peek().has_value())
     {
-        if (peak().value().type == TokenType::TOKEN_RETURN)
+        switch (peek().value().type)
+        {
+        case TokenType::TOKEN_RETURN:
         {
             consume();
             auto node_expr = parse_expr();
@@ -36,28 +38,40 @@ std::optional<NodeExit> Parser::parse()
                 node_value.expr = node_expr.value().int_lit;
                 exit_node = node_value;
             }
-            if (peak().has_value() || peak().value().type == TokenType::TOKEN_SEMI)
+            if (peek().has_value() || peek().value().type == TokenType::TOKEN_SEMI)
             {
                 consume();
             }
             else
             {
-                std::cerr << "Invalid expression missing semicolon\n";
+                std::cerr << "Expected ';'\n";
                 exit(EXIT_FAILURE);
             }
+            break;
         }
+        case TokenType::TOKEN_IF:
+        {
+        }
+        case TokenType::TOKEN_WHILE:
+        {
+        }
+        }
+
+        // if (peek().value().type == TokenType::TOKEN_RETURN)
+        // {
+        // }
     }
     m_index = 0;
     return exit_node;
 }
 
-const std::optional<Token> Parser::peak(int ahead) const
+const std::optional<Token> Parser::peek(int offset) const
 {
-    if (m_index + ahead > m_tokens.size())
+    if (m_index + offset >= m_tokens.size())
     {
         return {};
     }
-    return m_tokens.at(m_index);
+    return m_tokens.at(m_index + offset);
 }
 
 Token Parser::consume()

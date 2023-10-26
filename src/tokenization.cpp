@@ -9,11 +9,13 @@ std::vector<Token> Tokenizer::tokenize()
 {
     std::vector<Token> tokens;
     std::string buffer;
-    while (peak().has_value())
+    while (peek().has_value())
     {
-        if ((peak().value() >= 65 && peak().value() <= 90) || (peak().value() >= 97 && peak().value() <= 122))
+        // Checks whether a letter
+        if ((peek().value() >= 65 && peek().value() <= 90) || (peek().value() >= 97 && peek().value() <= 122))
         {
-            while ((peak().value() >= 65 && peak().value() <= 90) || (peak().value() >= 97 && peak().value() <= 122) || (peak().value() >= 48 && peak().value() <= 57))
+            // Checks whether a letter or number
+            while ((peek().value() >= 65 && peek().value() <= 90) || (peek().value() >= 97 && peek().value() <= 122) || (peek().value() >= 48 && peek().value() <= 57))
             {
                 buffer.push_back(consume());
             }
@@ -40,10 +42,11 @@ std::vector<Token> Tokenizer::tokenize()
                 buffer.clear();
             }
         }
-        else if (peak().value() >= 48 && peak().value() <= 57)
+        // Checks whether a number
+        else if (peek().value() >= 48 && peek().value() <= 57)
         {
             buffer.push_back(consume());
-            while (peak().value() >= 48 && peak().value() <= 57)
+            while (peek().value() >= 48 && peek().value() <= 57)
             {
                 buffer.push_back(consume());
             }
@@ -51,34 +54,34 @@ std::vector<Token> Tokenizer::tokenize()
             tokens.push_back(Token{TokenType::TOKEN_INT, buffer});
             buffer.clear();
         }
-        else if (peak().value() == ';')
+        else if (peek().value() == ';')
         {
             consume();
             // tokens.push_back({.type = TokenType::semi});
             tokens.push_back(Token{TokenType::TOKEN_SEMI});
             // buffer.clear();
         }
-        else if (peak().value() == ',')
+        else if (peek().value() == ',')
         {
             consume();
             tokens.push_back(Token{TokenType::TOKEN_COLON});
         }
-        else if (peak().value() == '.')
+        else if (peek().value() == '.')
         {
             consume();
             tokens.push_back(Token{TokenType::TOKEN_DOT});
         }
-        else if (peak().value() == '(')
+        else if (peek().value() == '(')
         {
             consume();
-            tokens.push_back(Token{TokenType::TOKEN_LEFTPAR});
+            tokens.push_back(Token{TokenType::TOKEN_OPENPAR});
         }
-        else if (peak().value() == ')')
+        else if (peek().value() == ')')
         {
             consume();
-            tokens.push_back(Token{TokenType::TOKEN_RIGHTPAR});
+            tokens.push_back(Token{TokenType::TOKEN_CLOSEPAR});
         }
-        else if (peak().value() == ' ')
+        else if (peek().value() == ' ')
         {
             consume();
             continue;
@@ -164,13 +167,13 @@ std::vector<Token> Tokenizer::tokenize()
     m_index = 0;
     return tokens;
 }
-const std::optional<char> Tokenizer::peak(int ahead) const
+const std::optional<char> Tokenizer::peek(int offset) const
 {
-    if (m_index + ahead > m_source.length())
+    if (m_index + offset >= m_source.length())
     {
         return {};
     }
-    return m_source.at(m_index);
+    return m_source.at(m_index + offset);
 }
 
 char Tokenizer::consume()

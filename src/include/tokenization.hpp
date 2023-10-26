@@ -17,8 +17,8 @@ enum class TokenType
     TOKEN_SEMI,
     TOKEN_COLON,
     TOKEN_COMMA,
-    TOKEN_LEFTPAR,
-    TOKEN_RIGHTPAR,
+    TOKEN_OPENPAR,
+    TOKEN_CLOSEPAR,
     TOKEN_IF,
     TOKEN_ELSE,
     TOKEN_ELIF,
@@ -45,6 +45,6 @@ private:
     const std::string m_source;
     size_t m_index = 0;
 
-    const std::optional<char> peak(int ahead = 1) const;
+    const std::optional<char> peek(int offset = 0) const;
     char consume();
 };

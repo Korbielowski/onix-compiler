@@ -11,5 +11,6 @@ std::string Generator::generate() const
     output << "     mov rax, 60\n";
     output << "     mov rdi, " << m_root.expr.value.value() << "\n";
     output << "     syscall";
+
     return output.str();
 }

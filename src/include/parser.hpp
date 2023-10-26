@@ -23,6 +23,6 @@ private:
     const std::vector<Token> m_tokens;
     size_t m_index = 0;
 
-    const std::optional<Token> peak(int ahead = 1) const;
+    const std::optional<Token> peek(int offset = 0) const;
     Token consume();
 };
