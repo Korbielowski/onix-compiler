@@ -3,6 +3,8 @@ CMakeFiles/
 build/
 
 CMakeCache.txt
+print_tokens.cpp
+.clang-format
 *.vcxproj
 *.filters
 *.cmake
